@@ -3,25 +3,25 @@ include "conexion.php";
 
 // Verificar si se envió el formulario de eliminación
 if (isset($_POST['eliminar'])) {
-    $id_categoria = $_POST['id_categoria'];
+    $id_proveedor = $_POST['id_proveedor'];
 
     try {
-        $sql = "DELETE FROM categoria WHERE id_categoria = :id_categoria";
+        $sql = "DELETE FROM proveedor WHERE id_proveedor = :id_proveedor";
         $stmt = $pdo->prepare($sql);
-        $stmt->execute([':id_categoria' => $id_categoria]);
-        $mensaje = "Categoría eliminada correctamente.";
+        $stmt->execute([':id_proveedor' => $id_proveedor]);
+        $mensaje = "Proveedor eliminado correctamente.";
     } catch (PDOException $e) {
-        $mensaje = "Error al eliminar la categoría: " . $e->getMessage();
+        $mensaje = "Error al eliminar el proveedor: " . $e->getMessage();
     }
 }
 
-// Obtener todas las categorías
+// Obtener todos los proveedores
 try {
-    $sql = "SELECT * FROM categoria";
+    $sql = "SELECT * FROM proveedor";
     $stmt = $pdo->query($sql);
-    $categorias = $stmt->fetchAll();
+    $proveedores = $stmt->fetchAll();
 } catch (PDOException $e) {
-    die("Error al obtener categorías: " . $e->getMessage());
+    die("Error al obtener proveedores: " . $e->getMessage());
 }
 ?>
 
@@ -29,11 +29,11 @@ try {
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Eliminar Categorías</title>
+    <title>Eliminar Proveedores</title>
     <style>
         table {
             border-collapse: collapse;
-            width: 50%;
+            width: 70%;
         }
         th, td {
             border: 1px solid #333;
@@ -57,7 +57,7 @@ try {
     </style>
 </head>
 <body>
-    <h2>Eliminar Categorías</h2>
+    <h2>Eliminar Proveedores</h2>
 
     <?php if (!empty($mensaje)) : ?>
         <div class="mensaje"><?php echo $mensaje; ?></div>
@@ -66,16 +66,20 @@ try {
     <table>
         <tr>
             <th>ID</th>
-            <th>Descripción</th>
+            <th>Razón Social</th>
+            <th>Dirección</th>
+            <th>Teléfono</th>
             <th>Acción</th>
         </tr>
-        <?php foreach ($categorias as $categoria) : ?>
+        <?php foreach ($proveedores as $proveedor) : ?>
         <tr>
-            <form method="post" action="eliminar.php" onsubmit="return confirm('¿Estás seguro de eliminar esta categoría?');">
-                <td><?php echo $categoria['id_categoria']; ?></td>
-                <td><?php echo htmlspecialchars($categoria['descripcion']); ?></td>
+            <form method="post" action="eliminar.php" onsubmit="return confirm('¿Estás seguro de eliminar este proveedor?');">
+                <td><?php echo $proveedor['id_proveedor']; ?></td>
+                <td><?php echo htmlspecialchars($proveedor['razonsocial']); ?></td>
+                <td><?php echo htmlspecialchars($proveedor['direccion']); ?></td>
+                <td><?php echo htmlspecialchars($proveedor['telefono']); ?></td>
                 <td>
-                    <input type="hidden" name="id_categoria" value="<?php echo $categoria['id_categoria']; ?>">
+                    <input type="hidden" name="id_proveedor" value="<?php echo $proveedor['id_proveedor']; ?>">
                     <input type="submit" name="eliminar" value="Eliminar">
                 </td>
             </form>
