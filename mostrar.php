@@ -4,7 +4,7 @@ include "conexion.php";
 
 try {
 
-    $sql = "SELECT id_cliente, nombres FROM clientes";
+    $sql = "SELECT id_cliente, nombres, apellidos FROM clientes";
 
     $stmt = $pdo->prepare($sql);
     $stmt->execute();
@@ -17,12 +17,14 @@ try {
     echo "<tr>
             <th>ID Cliente</th>
             <th>Nombres</th>
+            <th>Apellidos</th>
           </tr>";
 
     foreach ($clientes as $cliente) {
         echo "<tr>";
         echo "<td>" . $cliente['id_cliente'] . "</td>";
         echo "<td>" . $cliente['nombres'] . "</td>";
+        echo "<td>" . $cliente['apellidos'] . "</td>";
         echo "</tr>";
     }
 
