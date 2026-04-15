@@ -3,35 +3,37 @@ include "conexion.php";
 
 // Verificar si se envió el formulario de actualización
 if (isset($_POST['actualizar'])) {
-    $id_proveedor = $_POST['id_proveedor'];
-    $razonsocial = $_POST['razonsocial'];
+    $id_cliente = $_POST['id_cliente'];
+    $nombres = $_POST['nombres'];
+    $apellidos = $_POST['apellidos'];
     $direccion = $_POST['direccion'];
     $telefono = $_POST['telefono'];
 
     try {
-        $sql = "UPDATE proveedor 
-                SET razonsocial = :razonsocial, direccion = :direccion, telefono = :telefono
-                WHERE id_proveedor = :id_proveedor";
+        $sql = "UPDATE clientes 
+                SET nombres = :nombres, apellidos = :apellidos, direccion = :direccion, telefono = :telefono
+                WHERE id_cliente = :id_cliente";
         $stmt = $pdo->prepare($sql);
         $stmt->execute([
-            ':razonsocial' => $razonsocial,
+            ':nombres' => $nombres,
+            ':apellidos' => $apellidos,
             ':direccion' => $direccion,
             ':telefono' => $telefono,
-            ':id_proveedor' => $id_proveedor
+            ':id_cliente' => $id_cliente
         ]);
-        $mensaje = "Proveedor actualizado correctamente.";
+        $mensaje = "Cliente actualizado correctamente.";
     } catch (PDOException $e) {
-        $mensaje = "Error al actualizar el proveedor: " . $e->getMessage();
+        $mensaje = "Error al actualizar el cliente: " . $e->getMessage();
     }
 }
 
-// Obtener todos los proveedores
+// Obtener todos los clientes
 try {
-    $sql = "SELECT * FROM proveedor";
+    $sql = "SELECT * FROM clientes";
     $stmt = $pdo->query($sql);
-    $proveedores = $stmt->fetchAll();
+    $clientes = $stmt->fetchAll();
 } catch (PDOException $e) {
-    die("Error al obtener proveedores: " . $e->getMessage());
+    die("Error al obtener clientes: " . $e->getMessage());
 }
 ?>
 
@@ -39,11 +41,11 @@ try {
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Actualizar Proveedores</title>
+    <title>Actualizar Clientes</title>
     <style>
         table {
             border-collapse: collapse;
-            width: 70%;
+            width: 90%;
         }
         th, td {
             border: 1px solid #333;
@@ -63,7 +65,7 @@ try {
     </style>
 </head>
 <body>
-    <h2>Actualizar Proveedores</h2>
+    <h2>Actualizar Clientes</h2>
 
     <?php if (!empty($mensaje)) : ?>
         <div class="mensaje"><?php echo $mensaje; ?></div>
@@ -72,26 +74,22 @@ try {
     <table>
         <tr>
             <th>ID</th>
-            <th>Razón Social</th>
+            <th>Nombres</th>
+            <th>Apellidos</th>
             <th>Dirección</th>
             <th>Teléfono</th>
             <th>Acción</th>
         </tr>
-        <?php foreach ($proveedores as $proveedor) : ?>
+        <?php foreach ($clientes as $cliente) : ?>
         <tr>
             <form method="post" action="actualizar.php">
-                <td><?php echo $proveedor['id_proveedor']; ?></td>
+                <td><?php echo $cliente['id_cliente']; ?></td>
+                <td><input type="text" name="nombres" value="<?php echo htmlspecialchars($cliente['nombres']); ?>"></td>
+                <td><input type="text" name="apellidos" value="<?php echo htmlspecialchars($cliente['apellidos']); ?>"></td>
+                <td><input type="text" name="direccion" value="<?php echo htmlspecialchars($cliente['direccion']); ?>"></td>
+                <td><input type="text" name="telefono" value="<?php echo htmlspecialchars($cliente['telefono']); ?>"></td>
                 <td>
-                    <input type="text" name="razonsocial" value="<?php echo htmlspecialchars($proveedor['razonsocial']); ?>">
-                </td>
-                <td>
-                    <input type="text" name="direccion" value="<?php echo htmlspecialchars($proveedor['direccion']); ?>">
-                </td>
-                <td>
-                    <input type="text" name="telefono" value="<?php echo htmlspecialchars($proveedor['telefono']); ?>">
-                </td>
-                <td>
-                    <input type="hidden" name="id_proveedor" value="<?php echo $proveedor['id_proveedor']; ?>">
+                    <input type="hidden" name="id_cliente" value="<?php echo $cliente['id_cliente']; ?>">
                     <input type="submit" name="actualizar" value="Actualizar">
                 </td>
             </form>
