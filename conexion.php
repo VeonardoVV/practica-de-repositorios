@@ -5,17 +5,22 @@ $dbname = "base_datos";
 $user = "root";
 $password = "";
 
-// Crear conexión
-$conexion = mysqli_connect($host, $user, $password, $dbname);
+try {
 
-// Verificar conexión
-if (!$conexion) {
-    die("Error de conexión: " . mysqli_connect_error());
+    $dsn = "mysql:host=$host;dbname=$dbname;charset=utf8";
+
+    $options = [
+        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+        PDO::ATTR_PERSISTENT => false
+    ];
+
+    $pdo = new PDO($dsn, $user, $password, $options);
+
+    echo "Conexión exitosa";
+
+} catch (PDOException $e) {
+    die("Error de conexión: " . $e->getMessage());
 }
-
-// Opcional: configurar charset
-mysqli_set_charset($conexion, "utf8");
-
-echo "Conexión exitosa";
 
 ?>
